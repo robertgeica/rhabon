@@ -9,7 +9,7 @@ export const operateValves = async (req, res) => {
   try {
     const encodedPayload = encodePayloadToBase64(req.body);
 
-    const { stdout, stderr, code } = await runRemoteScript(encodedPayload);
+    const { stdout, stderr, code } = await runRemoteScript("start", encodedPayload);
 
     if (code !== 0) {
       console.error(`SSH process exited with code ${code}`);

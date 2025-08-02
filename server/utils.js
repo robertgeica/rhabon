@@ -1,5 +1,10 @@
 import { spawn } from 'child_process';
-import { remoteUser, remoteHost, remoteScriptPath } from './constants.js';
+import {
+  remoteUser,
+  remoteHost,
+  remoteScriptPath,
+  remoteStopScriptPath,
+} from './constants.js';
 
 /**
  * Encodes a JSON object to a base64 string.
@@ -12,14 +17,23 @@ export function encodePayloadToBase64(data) {
 
 /**
  * Spawns an SSH process to remotely execute the Python GPIO controller.
+ * @param {string} type - Command type.
  * @param {string} encodedPayload - Base64-encoded JSON payload.
  * @returns {Promise<{ stdout: string, stderr: string, code: number }>}
  */
-export function runRemoteScript(encodedPayload) {
+export function runRemoteScript(type, encodedPayload) {
+  const scriptPath = type === 'stop' ? remoteStopScriptPath : remoteScriptPath;
+  const commandParts = [`python3 ${scriptPath}`];
+
+  // Add payload if provided
+  if (encodedPayload) {
+    commandParts.push(`"${encodedPayload}"`);
+  }
+
   return new Promise((resolve) => {
     const sshArgs = [
       `${remoteUser}@${remoteHost}`,
-      `python3 ${remoteScriptPath} ${encodedPayload}`,
+      commandParts.join(' ')
     ];
 
     console.log(`Spawning SSH process: ssh ${sshArgs.join(' ')}`);
