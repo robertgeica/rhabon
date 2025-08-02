@@ -14,12 +14,12 @@ DEFAULT_DURATION_MINUTES = 10
 # Save the PID to a file for later termination
 with open("/tmp/valve_controller.pid", "w") as f:
     f.write(str(os.getpid()))
-    
+
 def print_usage():
     # Print usage instructions and exit the program.
     # python3 controller.py '[{"pin": 17, "state": true, "duration": 5, "order": 1}]'
     print(
-        "Usage: python3 controller.py '[{\"pin\": 17, \"state\": true, \"duration\": 5, \"order\": 1}]'",
+        'Usage: python3 controller.py \'[{"pin": 17, "state": true, "duration": 5, "order": 1}]\'',
         flush=True,
     )
     print("Duration is optional and in minutes; default is 10 minutes.", flush=True)
@@ -153,12 +153,12 @@ async def main():
             ]
 
             # Create task for detecting stop event
-            group_tasks = asyncio.gather(*tasks)
             stop_task = asyncio.create_task(stop_event.wait())
 
             # Wait until either pin tasks complete or stop event is triggered
             done, pending = await asyncio.wait(
-                {group_tasks, stop_task}, return_when=asyncio.FIRST_COMPLETED
+                tasks + [stop_task],
+                return_when=asyncio.FIRST_COMPLETED,
             )
 
             # If stop was requested, cancel all pin tasks
