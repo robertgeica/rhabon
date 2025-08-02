@@ -5,12 +5,16 @@ import json  # For decoding JSON
 import asyncio  # For async task management
 import signal  # For handling termination signals
 import base64  # For decoding the base64-encoded input
+import os  # For environment variable access
 from collections import defaultdict  # For grouping pins by execution order
 
 # Default pin activation duration in minutes
 DEFAULT_DURATION_MINUTES = 10
 
-
+# Save the PID to a file for later termination
+with open("/tmp/valve_controller.pid", "w") as f:
+    f.write(str(os.getpid()))
+    
 def print_usage():
     # Print usage instructions and exit the program.
     # python3 controller.py '[{"pin": 17, "state": true, "duration": 5, "order": 1}]'
