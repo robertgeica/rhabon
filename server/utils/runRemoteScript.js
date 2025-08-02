@@ -4,16 +4,8 @@ import {
   remoteHost,
   remoteScriptPath,
   remoteStopScriptPath,
-} from './constants.js';
+} from '../constants.js';
 
-/**
- * Encodes a JSON object to a base64 string.
- * @param {Object} data - The data to encode.
- * @returns {string} Base64-encoded string.
- */
-export function encodePayloadToBase64(data) {
-  return Buffer.from(JSON.stringify(data)).toString('base64');
-}
 
 /**
  * Spawns an SSH process to remotely execute the Python GPIO controller.

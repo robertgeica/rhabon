@@ -1,4 +1,4 @@
-import { runRemoteScript } from "../../utils.js";
+import { runRemoteScript } from "../../utils/index.js";
 
 export const stopValves = async (req, res) => {
   try {

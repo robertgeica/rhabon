@@ -1,5 +1,5 @@
+import { toBase64, runRemoteScript } from "../../utils/index.js";
 
-import { encodePayloadToBase64, runRemoteScript } from '../../utils.js';
 
 /**
  * Controller to activate GPIO pins remotely via SSH.
@@ -7,7 +7,7 @@ import { encodePayloadToBase64, runRemoteScript } from '../../utils.js';
  */
 export const operateValves = async (req, res) => {
   try {
-    const encodedPayload = encodePayloadToBase64(req.body);
+    const encodedPayload = toBase64(req.body);
 
     const { stdout, stderr, code } = await runRemoteScript("start", encodedPayload);
 
