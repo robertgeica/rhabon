@@ -1,0 +1,24 @@
+{
+  "name": "rhabon",
+  "version": "1.0.0",
+  "description": "Server for irrigation system",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robertgeica/rhabon.git"
+  },
+  "author": "Robert Geica",
+  "license": "CC-BY-NC-4.0",
+  "bugs": {
+    "url": "https://github.com/robertgeica/rhabon/issues"
+  },
+  "type": "module",
+  "homepage": "https://github.com/robertgeica/rhabon#readme",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0"
+  }
+}
