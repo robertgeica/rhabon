@@ -154,10 +154,13 @@ async def main():
 
             # Create task for detecting stop event
             stop_task = asyncio.create_task(stop_event.wait())
+            
+            # Create a gather task for all pin control tasks
+            group_tasks = asyncio.gather(*tasks)
 
             # Wait until either pin tasks complete or stop event is triggered
             done, pending = await asyncio.wait(
-                tasks + [stop_task],
+                [group_tasks, stop_task],
                 return_when=asyncio.FIRST_COMPLETED,
             )
 
