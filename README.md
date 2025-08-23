@@ -69,7 +69,7 @@ An automated irrigation system powered by solar energy, using multiple Raspberry
 
 <details>
   <summary>5V 8-Channel Relay Module (NC) Diagram</summary>
-  <img src="images/5v-relay.svg" alt="5V 8-Channel Relay Module (NC) Diagram" width="500">
+  <img src="images/5v-relay.png" alt="5V 8-Channel Relay Module (NC) Diagram" width="500">
 
 #### Wiring explanation
 
