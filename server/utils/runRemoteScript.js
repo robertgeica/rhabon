@@ -5,7 +5,8 @@ import {
   remoteScriptPath,
   remoteStopScriptPath,
 } from '../constants.js';
-
+import { eventEmitter } from './eventEmitter.js';
+import { logger } from './logger.js';
 
 /**
  * Spawns an SSH process to remotely execute the Python GPIO controller.
@@ -13,7 +14,7 @@ import {
  * @param {string} encodedPayload - Base64-encoded JSON payload.
  * @returns {Promise<{ stdout: string, stderr: string, code: number }>}
  */
-export function runRemoteScript(type, encodedPayload) {
+export function runRemoteScript(type, encodedPayload, operationId) {
   const scriptPath = type === 'stop' ? remoteStopScriptPath : remoteScriptPath;
   const commandParts = [`python3 ${scriptPath}`];
 
@@ -23,10 +24,7 @@ export function runRemoteScript(type, encodedPayload) {
   }
 
   return new Promise((resolve) => {
-    const sshArgs = [
-      `${remoteUser}@${remoteHost}`,
-      commandParts.join(' ')
-    ];
+    const sshArgs = [`${remoteUser}@${remoteHost}`, commandParts.join(' ')];
 
     console.log(`Spawning SSH process: ssh ${sshArgs.join(' ')}`);
     const sshProcess = spawn('ssh', sshArgs);
@@ -38,16 +36,25 @@ export function runRemoteScript(type, encodedPayload) {
       const text = data.toString();
       stdoutData += text;
       process.stdout.write(`[SSH STDOUT] ${text}`);
+
+      logger.write(operationId, `[STDOUT] ${text}`);
+      eventEmitter.emit('statusUpdate', text); // <-- emit live updates
     });
 
     sshProcess.stderr.on('data', (data) => {
       const text = data.toString();
       stderrData += text;
       process.stderr.write(`[SSH STDERR] ${text}`);
+
+      logger.write(operationId, `[STDERR] ${text}`);
+      eventEmitter.emit('statusUpdate', `ERROR: ${text}`);
     });
 
     sshProcess.on('close', (code) => {
       resolve({ stdout: stdoutData, stderr: stderrData, code });
+
+      logger.write(operationId, `[INFO] closed with code ${code}`);
+      eventEmitter.emit('statusUpdate', `Script finished with code ${code}`);
     });
   });
 }
